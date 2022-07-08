@@ -34,5 +34,8 @@ notched_signal = notch_filter(clipdata, sampling_frequency,
 #                             sampling_frequency, True)
 
 # 60hz notch 50 HPF 150 LPF
-filtered_signal_5_500 = bp_filter(notched_signal,emg_signal, 50, 150, 
+filtered_signal_50_150 = bp_filter(notched_signal,emg_signal, 50, 150, 
                                   sampling_frequency, True)
+_to_excel = pd.DataFrame(filtered_signal_50_150)
+_to_excel.to_excel("-100mv&filters.xlsx", index = False)
+

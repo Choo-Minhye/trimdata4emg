@@ -6,22 +6,30 @@ import pandas as pd
 
 
 def clipdata(x, samplerate, plot=False):
+    range_ = 2000
     t = np.arange(0, len(x) / samplerate, 1 / samplerate)
-    # Band Stop Filter (BSF) or Band Reject Filter
-    # [b, a] = signal.butter(4, [high_cutoff_notch, low_cutoff_notch], btype='stop')
-    # x_clip = np.clip(x,-95,90)
-    x_clip = [100 if i > 90 else i for i in x]
-    # x_filt = signal.filtfilt(b, a, x.T)
+    x_clip = [100 if i > 60 else i for i in x]
     print(len(x_clip))
     i = 0
     while i < len(x_clip) :
+        j = 0
         if x_clip[i] == 100 :
-            for x_clip[i] in range(i, i + 30000) : 
-                x_clip[i] = 0
-                i = i + 1
+            if i < int(range_/2) + 1 : 
+                for j in range(i, i + range_) : 
+                    x_clip[j] = -100 #mv
+                fs =i/1000
+                ss = (i + range_) /1000 
+            else : 
+                for j in range(i-int(range_/2),i+int(range_/2) ) :
+                    x_clip[j] = -100 #mv
+        
+                fs =(i-range_/2) / 1000 
+                ss = (i + range_/2) /1000 
+        
+            print("no usual 구간 : " + str(fs) + "초 - " + str(ss) + "초" )
+            
+        i = i+1
 
-        else :      
-            i = i+1
 
 
     if plot:
