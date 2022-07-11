@@ -8,7 +8,7 @@ import pandas as pd
 def clipdata(x, samplerate, plot=False):
     range_ = 2000
     t = np.arange(0, len(x) / samplerate, 1 / samplerate)
-    x_clip = [100 if i > 60 else i for i in x]
+    x_clip = [100 if i > 75 else i for i in x]
     print(len(x_clip))
     i = 0
     while i < len(x_clip) :
@@ -29,8 +29,6 @@ def clipdata(x, samplerate, plot=False):
             print("no usual 구간 : " + str(fs) + "초 - " + str(ss) + "초" )
             
         i = i+1
-
-
 
     if plot:
         plt.plot(t, x)
