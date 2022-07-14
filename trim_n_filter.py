@@ -6,22 +6,23 @@ import pandas as pd
 
 
 def clipdata(x, samplerate, plot=False):
-    range_ = 2000
+    range_ = 2000  # back and foward each 1s
     t = np.arange(0, len(x) / samplerate, 1 / samplerate)
-    x_clip = [100 if i > 75 else i for i in x]
-    print(len(x_clip))
+    x_clip = [100 if i > 75 else i for i in x]  # give threshold to ignore above a certain hz
+    
     i = 0
     while i < len(x_clip) :
         j = 0
         if x_clip[i] == 100 :
-            if i < int(range_/2) + 1 : 
+            if i < int(range_/2) + 1 :  # If an anomaly is found in a time period less than range second
                 for j in range(i, i + range_) : 
-                    x_clip[j] = -100 #mv
+                    x_clip[j] = -100 #mv    # Replace the section requiring trim with -100hz.
                 fs =i/1000
                 ss = (i + range_) /1000 
             else : 
                 for j in range(i-int(range_/2),i+int(range_/2) ) :
-                    x_clip[j] = -100 #mv
+                    x_clip[j] = -100 #mv    # Replace the section requiring trim with -100hz.
+                    x_clip[j] = -100 #mv    
         
                 fs =(i-range_/2) / 1000 
                 ss = (i + range_/2) /1000 
@@ -40,7 +41,8 @@ def clipdata(x, samplerate, plot=False):
         plt.show()
 
     return x_clip
-
+   
+    
 
 def notch_filter(x, samplerate, plot=False):
     x = x - np.mean(x)
@@ -65,7 +67,7 @@ def notch_filter(x, samplerate, plot=False):
 
     return x_filt
 
-# 60hz notch 50 HPF 150 LPF
+
 def bp_filter(x,y, high_pass, low_pass, samplerate, plot=False):
     # x = x - np.mean(x)
 
@@ -98,9 +100,7 @@ def plot_signal(x, samplerate, chname):
     plt.title(chname)
     plt.show()
     
-    
-    
-    
+
     
     
 # import logging

@@ -7,15 +7,11 @@ import pywt
 
 def features_estimation(signal, channel_name, fs, frame, step, plot=True):
     """
-    Compute time, frequency and time-frequency features from signal.
     :param signal: numpy array signal.
-    :param channel_name: string variable with the EMG channel name in analysis.
-    :param fs: int variable with the sampling frequency used to acquire the signal
+    :param fs: int, sampling frequency
     :param frame: sliding window size
     :param step: sliding window step size
     :param plot: boolean variable to plot estimated features.
-    :return: total_feature_matrix -- python Data-frame with.
-    :return: features_names -- python list with
     """
 
     features_names = ['VAR', 'RMS', 'IEMG', 'MAV', 'LOG', 'WL', 'ACC', 'DASDV', 'ZC', 'WAMP', 'MYOP', "FR", "MNP", "TP",
@@ -36,13 +32,6 @@ def features_estimation(signal, channel_name, fs, frame, step, plot=True):
 
 
 def time_features_estimation(signal, frame, step):
-    """
-    Compute time features from signal using sliding window method.
-    :param signal: numpy array signal.
-    :param frame: sliding window size.
-    :param step: sliding window step size.
-    :return: time_features_matrix: narray matrix with the time features stacked by columns.
-    """
 
     variance = []
     rms = []
@@ -257,24 +246,18 @@ def med_freq(f, P):
 
 def plot_features(signal, channel_name, fs, feature_matrix, step):
     """
-    Argument:
-    signal -- python numpy array representing recording of a signal.
-    channel_name -- string variable with the EMG channel name in analysis (Title).
-    fs -- int variable with the sampling frequency used to acquire the signal.
     feature_matrix -- python Dataframe.
-    step -- int variable with the step size used in the sliding window method.
     """
 
     ts = np.arange(0, len(signal) / fs, 1 / fs)
-    # for idx, f in enumerate(tfeatures.T):
     for key in feature_matrix.T:
         tf = step * (np.arange(0, len(feature_matrix.T[key]) / fs, 1 / fs))
         fig = plt.figure()
 
         ax = fig.add_subplot(111, label="1")
         ax2 = fig.add_subplot(111, label="2", frame_on=False)
-        # ax.plot(ts, signal, color="C0")
-        # ax.autoscale(tight=True)
+        ax.plot(ts, signal, color="C0")
+        ax.autoscale(tight=True)
         plt.title(channel_name + ": " + key)
         ax.set_xlabel("Time")
         ax.set_ylabel("mV")
