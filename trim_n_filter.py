@@ -100,7 +100,89 @@ def plot_signal(x, samplerate, chname):
     plt.title(chname)
     plt.show()
     
+    
+def plot_2_signal(x, y, samplerate, chname_1, chname_2):
+    t = np.arange(0, len(x) / samplerate, 1 / samplerate)
+    plt.subplot(2,1,1)
+    plt.style.use('seaborn-pastel')
+    plt.plot(t, x, label = chname_1,alpha = 0.5, color = "hotpink" )
+    plt.plot(t, y, label = chname_2,alpha = 0.5, color = "green" )
+    plt.autoscale(tight=True)
+    plt.xlabel('Time')
+    # plt.ylabel('Amplitude (mV)')
+    # plt.title(chname)
 
+def plot_t_signal(x, y, chname_1, chname_2):
+    plt.subplot(2,1,2)
+    plt.style.use('seaborn-pastel')
+    plt.plot(x, label = chname_1,alpha = 0.5, color = "hotpink" )
+    plt.plot(y, label = chname_2,alpha = 0.5, color = "green" )
+    plt.autoscale(tight=True)
+    plt.xlabel('Time')
+    # plt.ylabel('Amplitude (mV)')
+    # plt.title(chname)
+
+def signal_analysis(x,y, samplerate, window_size, plot=False) :
+
+    x_num = 0; y_num = 0; x_arr=[]; y_arr = []; x_t_arr=[]; y_t_arr= [];y_arr_over_num=[]; info=[]; set_an_y=[]
+
+    for i in range(len(x)) :
+        if x[i] != 0 :
+            x_num += 1
+        if y[i] != 0 :
+            y_num += 1
+  
+    i = 0; j = 0
+    while i < len(x) :
+
+        if (x[i] != 0 ) :
+            y_exist = 0
+            if i < int(window_size/2) + 1 :  # If an signal is found in a time period less than range second
+                for j in range(i, i + int(window_size/2)) : 
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+            
+            else : 
+                for j in range(i-int(window_size/2),i+int(window_size/2) ) :
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+                    
+            if y_exist == 1 :
+                x_t_arr.append(i)
+                x_arr.append(x[i])
+              
+        i = i+1
+
+
+    for value in y_arr_over_num:
+        if value not in set_an_y:
+            set_an_y.append(value)
+    
+    for i in range(len(set_an_y)) :
+        y_arr.append(y[set_an_y[i]])
+    
+    
+    y_t_arr = set_an_y
+    
+    info.append(window_size)
+    info.append(x_num)
+    info.append(y_num)
+    info.append(len(x_arr))
+    info.append(len(y_arr))
+    print(info)
+    
+    z_x_arr=[];z_y_arr=[]
+    
+    # for i in range(len(x)) :
+    #     z_x_arr = 
+    
+    
+    
+    return x_arr, y_arr, x_t_arr, y_t_arr, info
+
+    
     
     
 # import logging
