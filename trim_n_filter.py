@@ -125,6 +125,7 @@ def plot_t_signal(x, y, chname_1, chname_2):
 def signal_analysis(x,y, samplerate, window_size, plot=False) :
 
     x_num = 0; y_num = 0; x_arr=[]; y_arr = []; x_t_arr=[]; y_t_arr= [];y_arr_over_num=[]; info=[]; set_an_y=[]
+    z_x_arr=[];z_y_arr=[]
 
     for i in range(len(x)) :
         if x[i] != 0 :
@@ -173,18 +174,170 @@ def signal_analysis(x,y, samplerate, window_size, plot=False) :
     info.append(len(y_arr))
     print(info)
     
-    z_x_arr=[];z_y_arr=[]
-    
-    # for i in range(len(x)) :
-    #     z_x_arr = 
-    
-    
     
     return x_arr, y_arr, x_t_arr, y_t_arr, info
 
     
+
+def signal_analysis_2(x,y, samplerate, window_size, plot=False) :
+
+    x_th_num = 0; y_th_num = 0; x_arr=[]; y_arr = []; x_t_arr=[]; y_t_arr= [];y_arr_over_num=[]; set_an_y=[]
+    z_x_arr=[];z_y_arr=[]
+    # plt.subplot(2,2,1)
+    # plt.plot(x)
+    # plt.subplot(2,2,2)
+    # plt.plot(y)
+    
+
+    x = [0 if i < 15 else i for i in x]  # give threshold to ignore below a certain scale
+    y = [0 if i < 15 else i for i in y]  # give threshold to ignore below a certain scale
+    # plt.subplot(2,2,3)
+    # plt.plot(x)
+    # plt.subplot(2,2,4)
+    # plt.plot(y)
+    b_th = x
+    c_th = y
+    
+    for i in range(len(x)) :
+        if x[i] != 0 :
+            x_th_num += 1
+        if y[i] != 0 :
+            y_th_num += 1
+  
+  
+
+    i = 0; j = 0
+    while i < len(x) :
+
+        if (x[i] != 0 ) :
+            y_exist = 0
+            if i < int(window_size/2) + 1 :  # If an signal is found in a time period less than range second
+                for j in range(i, i + int(window_size/2)) : 
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+            
+            else : 
+                for j in range(i-int(window_size/2),i+int(window_size/2) ) :
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+                    
+            if y_exist == 1 :
+                x_t_arr.append(i)
+                # x_arr.append(x[i])
+              
+        i = i+1
+
+
+    for value in y_arr_over_num:
+        if value not in set_an_y:
+            set_an_y.append(value)
+
+    for i in range(len(x)) :
+        if i in x_t_arr :
+            x_arr.append(x[x_t_arr[x_t_arr.index(i)]])
+        else : 
+            x_arr.append(0)
+
+    for i in range(len(y)) :
+        if i in set_an_y :
+            y_arr.append(y[set_an_y[set_an_y.index(i)]])
+        else : 
+            y_arr.append(0)
+    
+            
+    y_t_arr = set_an_y
+    
+    info = {'window_size' : window_size , 'range' : '-'+ str(int(window_size/2)) + ',' + str(int(window_size/2)), 
+            'b_th의 0이 아닌 데이터 수':x_th_num,'c_th의 0이 아닌 데이터 수':y_th_num, 
+            'b_s의 데이터 수' : len(x_t_arr),'c_s의 데이터 수' : len(y_t_arr),
+            'b_s/b_th' : round(len(x_t_arr)/x_th_num,3),'c_s/c_th' : round(len(y_t_arr)/y_th_num,3)
+            }
+    # info.append(window_size)
+    # info.append(x_th_num)
+    # info.append(y_th_num)
+    # info.append(len(x_arr))
+    # info.append(len(y_arr))
+    print(info)
     
     
+    return b_th, c_th, x_arr, y_arr, info
+
+
+
+
+
+
+
+
+def signal_analysis_3(x,y, samplerate, window_size, plot=False) :
+    x_th_num = 0; y_th_num = 0; x_arr=[]; y_arr = []; x_t_arr=[]; y_t_arr= [];y_arr_over_num=[]; set_an_y=[]; info=[]
+    z_x_arr=[];z_y_arr=[]
+    # plt.subplot(2,2,1)
+    # plt.plot(x)
+    # plt.subplot(2,2,2)
+    # plt.plot(y)
+    
+
+    x = [0 if i < 15 else i for i in x]  # give threshold to ignore below a certain scale
+    y = [0 if i < 15 else i for i in y]  # give threshold to ignore below a certain scale
+    # plt.subplot(2,2,3)
+    # plt.plot(x)
+    # plt.subplot(2,2,4)
+    # plt.plot(y)
+    
+    for i in range(len(x)) :
+        if x[i] != 0 :
+            x_th_num += 1
+        if y[i] != 0 :
+            y_th_num += 1
+  
+    i = 0; j = 0
+    while i < len(x) :
+
+        if (x[i] != 0 ) :
+            y_exist = 0
+            if i < int(window_size/2) + 1 :  # If an signal is found in a time period less than range second
+                for j in range(i, i + int(window_size/2)) : 
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+            
+            else : 
+                for j in range(i-int(window_size/2),i+int(window_size/2) ) :
+                    if y[j] != 0 :
+                        y_exist = 1
+                        y_arr_over_num.append(j)
+                    
+            if y_exist == 1 :
+                x_t_arr.append(i)
+                x_arr.append(x[i])
+              
+        i = i+1
+
+
+    for value in y_arr_over_num:
+        if value not in set_an_y:
+            set_an_y.append(value)
+    
+    for i in range(len(set_an_y)) :
+        y_arr.append(y[set_an_y[i]])
+    
+    
+    y_t_arr = set_an_y
+    
+    info.append(window_size)
+    info.append(x_th_num)
+    info.append(y_th_num)
+    info.append(len(x_arr))
+    info.append(len(y_arr))
+    # print(info)
+    
+    
+    return x_arr, y_arr, x_t_arr, y_t_arr
+
+
 # import logging
 # import numpy as np
 # import pandas as pd
